@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/SocialConnect-Backend.iml" filepath="$PROJECT_DIR$/SocialConnect-Backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/user-ms/user-ms.iml" filepath="$PROJECT_DIR$/user-ms/user-ms.iml" />
+    </modules>
+  </component>
+</project>
