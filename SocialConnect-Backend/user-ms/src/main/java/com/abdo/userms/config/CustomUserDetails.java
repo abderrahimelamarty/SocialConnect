@@ -1,18 +1,22 @@
 package com.abdo.userms.config;
 
+import com.abdo.userms.entity.UserCredential;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import com.javatechie.entity.UserCredential;
-import java.util.Collection;
 
+import java.util.Collection;
+ @Data
 public class CustomUserDetails implements UserDetails {
 
     private String username;
     private String password;
 
+    private String email;
     public CustomUserDetails(UserCredential userCredential) {
         this.username = userCredential.getName();
         this.password = userCredential.getPassword();
+        this.email=userCredential.getEmail();
     }
 
     @Override

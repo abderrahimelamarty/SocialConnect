@@ -1,12 +1,16 @@
 package com.abdo.userms.controller;
 
+import com.abdo.userms.config.CustomUserDetails;
 import com.abdo.userms.dto.AuthRequest;
+import com.abdo.userms.dto.LoginResponse;
 import com.abdo.userms.entity.UserCredential;
 import com.abdo.userms.service.AuthService;
 
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,10 +31,17 @@ public class AuthController {
     }
 
     @PostMapping("/token")
-    public String getToken(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<LoginResponse> getToken(@RequestBody AuthRequest authRequest) {
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+        CustomUserDetails user= (CustomUserDetails) authenticate.getPrincipal();
         if (authenticate.isAuthenticated()) {
-            return service.generateToken(authRequest.getUsername());
+            String token = service.generateToken(authRequest.getUsername());
+            LoginResponse loginResponse = new LoginResponse();
+            loginResponse.setToken(token);
+            loginResponse.setName(user.getUsername());
+            // Assuming you have user details in the 'user' object
+            loginResponse.setEmail(user.getEmail());
+          return new ResponseEntity<>(loginResponse, HttpStatus.OK) ;
         } else {
             throw new RuntimeException("invalid access");
         }
