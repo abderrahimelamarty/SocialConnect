@@ -14,7 +14,7 @@ const initialState: AuthState = user.token
     }
   : {
       isLoggedIn: false,
-      user: { token: '', refreshToken: '' },
+      user: { token: '', email: '', name:'' },
       error: ''
     };
 
@@ -83,7 +83,8 @@ export const authSlice = createSlice({
     },
     refreshToken: (state, { payload }) => {
       state.user.token = payload.acessToken;
-      state.user.refreshToken = payload.refreshToken;
+      state.user.email = payload.email;
+      state.user.name = payload.name;
     }
   },
   extraReducers: (builder) => {
@@ -101,7 +102,7 @@ export const authSlice = createSlice({
       })
       .addCase(logoutAsync.fulfilled, (state) => {
         state.isLoggedIn = false;
-        state.user = { token: '', refreshToken: '' };
+        state.user = { token: '', email:'',name:'' };
         state.error = '';
       });
   }

@@ -1,7 +1,8 @@
 
     export interface User {
       token: string;
-      refreshToken: string;
+      email:string,
+      name:string
     }
   
     export type AuthState = {
