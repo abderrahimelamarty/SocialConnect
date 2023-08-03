@@ -22,3 +22,14 @@
       password: string;
 
     };
+export type Post ={
+   id: number;
+   
+   userId: number;
+   text: string;
+   image: string;
+   timestamp: Date;
+   likes: number;
+   comments: number;
+
+}

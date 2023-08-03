@@ -5,14 +5,24 @@ import { GiSettingsKnobs } from "react-icons/gi";
 import { BsFillImageFill } from "react-icons/bs";
 import { Link } from 'react-router-dom';
 import { BiSolidMap } from 'react-icons/bi';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { getPosts, selectPost } from '../../features/posts/postSlice';
+import {  useEffect } from "react";
+import { Post } from '../../components/Post/Post';
 export default function Home() {
+    const dispatch=useAppDispatch()
+
+    useEffect(() => {
+        dispatch(getPosts());
+      }, [dispatch]);
+      const { loading, data } = useAppSelector(selectPost);
   return (
-    <div className='bg-gray-100'>
+    <div >
       <MobileNavBar/>
     <div className="flex justify-center px-5 sm:px-32 md:mt-4">
     <div className="flex h-screen w-screen">
       <Leftside/>
-      <main className="md:mx-4 w-full sm:basis-2/3">
+      <main className="md:mx-4 w-full sm:basis-2/3 mb-5">
 
                         
 
@@ -89,7 +99,18 @@ export default function Home() {
                                 </div>
                                 } */}
                             </div>
-
+                           <>
+                           {loading ? (
+          <h1>loading ...</h1>
+        ) : (
+          data &&
+          data.map((post) => (
+            <div className="col-md-6 col-lg-4" key={post.id}>
+             <Post  post={post} />
+            </div>
+          ))
+        )}
+                           </>
                             {/* Show Posts
 
                             {isLoading ? (

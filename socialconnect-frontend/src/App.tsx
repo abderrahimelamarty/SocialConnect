@@ -7,7 +7,7 @@ import Home from './pages/home/Home';
 import PrivateRoute from './components/PrivateRoute';
 import Navbar from './components/NavBar/Navbar';
 import { Profile } from './pages/Profile/Profile';
-
+import "./App.css"
 
 function App() {
   return (
