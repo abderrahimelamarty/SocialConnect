@@ -11,6 +11,7 @@ import {  useEffect } from "react";
 import { Post } from '../../components/Post/Post';
 import { AsideRight } from '../../components/Rightside/Rightside';
 import { AiOutlineArrowUp } from 'react-icons/ai';
+import CreatePost from '../../components/createPost/CreatePost';
 export default function Home() {
     const dispatch=useAppDispatch()
 
@@ -35,7 +36,7 @@ export default function Home() {
                         {/* create post */}
 
                         <>
-                            <div className="border sm:ml-3 sm:mr-0  bg-white flex px-2 py-3 rounded-3xl mt-5">
+                            {/* <div className="border sm:ml-3 sm:mr-0  bg-white flex px-2 py-3 rounded-3xl mt-5">
 
                                 <div className="mt-3 w-12 h-12 text-lg flex-none">
                                     <img src="https://img.freepik.com/premium-vector/young-man-anime-style-character-vector-illustration-design-manga-anime-boy_147933-2539.jpg" className="flex-none w-12 h-12 rounded-full" alt="avatar" />
@@ -76,7 +77,8 @@ export default function Home() {
                                         </button>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
+                            <CreatePost/>
 
 
                             {/* filter posts by date and trending */}
