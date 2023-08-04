@@ -9,6 +9,8 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { getPosts, selectPost } from '../../features/posts/postSlice';
 import {  useEffect } from "react";
 import { Post } from '../../components/Post/Post';
+import { AsideRight } from '../../components/Rightside/Rightside';
+import { AiOutlineArrowUp } from 'react-icons/ai';
 export default function Home() {
     const dispatch=useAppDispatch()
 
@@ -127,6 +129,10 @@ export default function Home() {
                         </>
 
                     </main>
+                    <AsideRight />
+                    <a href="#">
+                        <AiOutlineArrowUp className="hidden sm:block fixed bottom-0 right-20 bg-blue-300 text-slate-50 text-5xl p-3 rounded-full mb-2 mr-20 hover:bg-blue-500" />
+                    </a>
 
       </div>
       </div>

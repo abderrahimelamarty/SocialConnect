@@ -11,8 +11,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { Post as post } from "../../types";
-import { useAppSelector } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { selectAuth } from "../../features/authSlice";
+import { dislikePost, likePost } from "../../features/posts/postSlice";
 
 export const Post = ( {post}:{post:post}) => {
 
@@ -34,7 +35,7 @@ export const Post = ( {post}:{post:post}) => {
     // const isLiked = post?.likes?.likedBy?.find(user => user.username === userData.username);
 const isLiked=false;
 const isBookmarked =false;
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     // const currentUser = users.find(user => user.username === post?.username);
 
@@ -151,12 +152,12 @@ const isBookmarked =false;
                         {isLiked ? (
                             <BsSuitHeartFill className="text-xl cursor-pointer text-red-600" onClick={e => {
                                 e.stopPropagation();
-                                // dispatch(dislikePost({ postId: post?._id, token }));
+                                dispatch(dislikePost( post?.id ));
                             }} />
                         ) : (
                             <BsSuitHeart className="text-xl cursor-pointer" onClick={e => {
                                 e.stopPropagation();
-                                // dispatch(likePost({ postId: post?._id, token }));
+                                dispatch(likePost(  post?.id ));
                             }} />
                         )}
                         <span className="text-sm pl-4 font-semibold">
