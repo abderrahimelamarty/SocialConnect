@@ -1,15 +1,19 @@
 package com.abdo.postms.controllers;
 
 import com.abdo.postms.entities.Post;
+import com.abdo.postms.exceptions.ResourceNotFoundException;
 import com.abdo.postms.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/posts")
+
 public class PostController {
     private final PostService postService;
 
@@ -47,6 +51,11 @@ public class PostController {
             return postService.savePost(existingPost);
         }
         return null;
+    }
+
+    @PostMapping("/{postId}/like")
+    public ResponseEntity<Post> likePost(@PathVariable Long postId) {
+       return ResponseEntity.ok(postService.likePost(postId));
     }
 
     @DeleteMapping("/{id}")

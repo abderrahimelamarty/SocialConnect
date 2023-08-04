@@ -30,9 +30,21 @@ public class PostService {
     public Post savePost(Post post) {
         return postRepository.save(post);
     }
-    public void deletePostById(Long id) {
+    public Post likePost(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() ->
+                new ResourceNotFoundException("Post with ID " + postId + " not found")
+        );
+
+        // Increment the like count for the post
+        post.setLikes(post.getLikes() + 1);
+
+        // Save the updated post in the database
+        return postRepository.save(post);
+    }
+    public String deletePostById(Long id)  {
 
         postRepository.deleteById(id);
+        return "Post deleted ";
     }
     // Add additional methods based on your application's requirements
 }
