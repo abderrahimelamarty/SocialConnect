@@ -19,6 +19,7 @@ import { BiSmile, BiWorld } from "react-icons/bi";
 import { AiFillHeart, AiOutlineCamera, AiOutlineGif, AiOutlineHeart } from "react-icons/ai";
 import { FaRegCommentAlt, FaShare } from "react-icons/fa";
 import {PiShareFatBold} from'react-icons/pi'
+import { FlareSharp } from "@mui/icons-material";
 export const Post = ( {post}:{post:post}) => {
 
     const [postOptions, setPostOptions] = useState(false);
@@ -37,10 +38,10 @@ export const Post = ( {post}:{post:post}) => {
     // const isBookmarked = bookmarks?.find(id => id === post?._id);
 
     // const isLiked = post?.likes?.likedBy?.find(user => user.username === userData.username);
-const isLiked=false;
-const isBookmarked =false;
+       const [isLiked,setIsLiked]= useState(false);
+         const isBookmarked =false;
     const dispatch = useAppDispatch();
-
+   
     // const currentUser = users.find(user => user.username === post?.username);
 
     // const authUser = users.find(user => user.username === userData.username);
@@ -233,7 +234,7 @@ const isBookmarked =false;
               </div>
              
               <p className="pl-2 whitespace-nowrap  text-[15px] sm:text-[16px]">
-                {` Emily Doe and another ${post.likes}`}
+                {`  ${post.likes} Likes`}
               </p>
             </div>
             <p className="whitespace-nowrap text-[15px] sm:text-[16px]">
@@ -243,8 +244,22 @@ const isBookmarked =false;
   
           <div className="border-b my-2"></div>
           <div className="flex justify-between mx-6">
-            <div className="flex items-center"  >
-               <AiOutlineHeart className="w-7 h-7"/>
+            <div className="flex items-center"   >
+            {isLiked ? (
+                            <BsSuitHeartFill className="text-xl cursor-pointer text-red-600" onClick={e => {
+                                e.stopPropagation();
+                                dispatch(dislikePost( post?.id ));
+                                
+                            }} />
+                        ) : (
+                            <BsSuitHeart className="text-xl cursor-pointer" onClick={e => {
+                                e.stopPropagation();
+                                
+                                dispatch(likePost(  post?.id ));
+                                
+                                
+                            }} />
+                        )}
               <p className="pl-2 text-[18px]">Like</p>
             </div>
             <div className="flex items-center">

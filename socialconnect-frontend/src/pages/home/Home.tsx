@@ -12,6 +12,7 @@ import { Post } from '../../components/Post/Post';
 import { AsideRight } from '../../components/Rightside/Rightside';
 import { AiOutlineArrowUp } from 'react-icons/ai';
 import CreatePost from '../../components/createPost/CreatePost';
+import { ColorRing } from  'react-loader-spinner'
 export default function Home() {
     const dispatch=useAppDispatch()
 
@@ -105,7 +106,19 @@ export default function Home() {
                             </div>
                            <>
                            {loading ? (
-          <h1>loading ...</h1>
+                                          <div className="flex items-center justify-center mt-10">
+                                          <ColorRing
+  visible={loading}
+  height="80"
+  width="80"
+  ariaLabel="blocks-loading"
+  wrapperStyle={{}}
+  wrapperClass=""
+  colors={['#056EF5', '#054AA2', '#18D8EB', '#889BF0', '#121CF3']}
+/>
+                                          
+                                      </div>
+      
         ) : (
           data &&
           data.map((post) => (
