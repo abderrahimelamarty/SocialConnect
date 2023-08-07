@@ -23,7 +23,8 @@ import { FlareSharp } from "@mui/icons-material";
 export const Post = ( {post}:{post:post}) => {
 
     const [postOptions, setPostOptions] = useState(false);
-
+  const [postId,setPostId]=useState(post?.id);
+  
     const { pathname } = useLocation();
 
     // const {
@@ -36,12 +37,15 @@ export const Post = ( {post}:{post:post}) => {
     const navigate = useNavigate();
 
     // const isBookmarked = bookmarks?.find(id => id === post?._id);
+    const userId:number=1;
+     const isLiked = post?.likes?.find(user => user === userId);
+          
+          const isBookmarked =false;
+          const dispatch = useAppDispatch();
+          
+            
 
-    // const isLiked = post?.likes?.likedBy?.find(user => user.username === userData.username);
-       const [isLiked,setIsLiked]= useState(false);
-         const isBookmarked =false;
-    const dispatch = useAppDispatch();
-   
+          
     // const currentUser = users.find(user => user.username === post?.username);
 
     // const authUser = users.find(user => user.username === userData.username);
@@ -234,7 +238,7 @@ export const Post = ( {post}:{post:post}) => {
               </div>
              
               <p className="pl-2 whitespace-nowrap  text-[15px] sm:text-[16px]">
-                {`  ${post.likes} Likes`}
+                {`  ${post.likes.length} Likes`}
               </p>
             </div>
             <p className="whitespace-nowrap text-[15px] sm:text-[16px]">
@@ -248,14 +252,13 @@ export const Post = ( {post}:{post:post}) => {
             {isLiked ? (
                             <BsSuitHeartFill className="text-xl cursor-pointer text-red-600" onClick={e => {
                                 e.stopPropagation();
-                                dispatch(dislikePost( post?.id ));
-                                
+                                dispatch(dislikePost( {postId,userId} ));
+                              
                             }} />
                         ) : (
                             <BsSuitHeart className="text-xl cursor-pointer" onClick={e => {
                                 e.stopPropagation();
-                                
-                                dispatch(likePost(  post?.id ));
+                                dispatch(likePost( {postId,userId}  ));
                                 
                                 
                             }} />

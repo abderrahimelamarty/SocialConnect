@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
-import {Post} from "../../types";
+import {Like, Post, PostRequest} from "../../types";
 import { RootState } from "../../store/store";
  
 const URL:string="http://localhost:8083/api/posts"
@@ -12,6 +12,20 @@ export const getPosts = createAsyncThunk(
       const response = await axios.get<Post[]>(
         URL
       );
+      console.log(response.data)
+      return response.data;
+    } catch (error: any) {
+      const message = error.message;
+      return thunkApi.rejectWithValue(message);
+    }
+  }
+);
+export const createPost = createAsyncThunk(
+  "posts/createPost",
+  async (newPost: PostRequest, thunkApi) => {
+    try {
+      // Replace the URL with the actual endpoint to create a new post
+      const response = await axios.post<Post>(URL, newPost);
       return response.data;
     } catch (error: any) {
       const message = error.message;
@@ -21,13 +35,15 @@ export const getPosts = createAsyncThunk(
 );
 export const likePost = createAsyncThunk(
   "posts/likePost",
-  async (postId: number, thunkApi) => {
+  async (like: Like,thunkApi) => {
+    
     try {
-      const URL = `http://localhost:8082/POST-SERVICE/api/posts/${postId}/like`; // Replace with the actual URL to like the post
+      const URL = `http://localhost:8082/POST-SERVICE/api/posts/${like.postId}/like/${like.userId}`; // Replace with the actual URL to like the post
       const response = await axios.post<Post>(URL);
       return response.data;
     } catch (error: any) {
       const message = error.message;
+     
       return thunkApi.rejectWithValue(message);
     }
   }
@@ -35,10 +51,17 @@ export const likePost = createAsyncThunk(
 
 export const dislikePost = createAsyncThunk(
   "posts/dislikePost",
-  async (postId:number) => {
-    const URL = `http://localhost:8082/POST-SERVICE/api/posts/${postId}/dislike`; // Replace with the actual API endpoint for disliking a post
-    const response = await axios.post(URL);
-    return response.data;
+  async (like: Like,thunkApi) => {
+    
+    try {
+      const URL = `http://localhost:8082/POST-SERVICE/api/posts/${like.postId}/dislike/${like.userId}`; // Replace with the actual URL to like the post
+      const response = await axios.post<Post>(URL);
+      return response.data;
+    } catch (error: any) {
+      const message = error.message;
+     
+      return thunkApi.rejectWithValue(message);
+    }
   }
 );
 
@@ -71,7 +94,7 @@ const postSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(likePost.pending, (state, action) => {
-        state.loading = true;
+       
       })
       .addCase(likePost.fulfilled, (state, action: PayloadAction<Post>) => {
         state.loading = false;
@@ -84,7 +107,7 @@ const postSlice = createSlice({
   
           // If the liked post is found in the state data, update its like count
           if (likedPostIndex !== undefined && likedPostIndex !== -1) {
-            state.data[likedPostIndex].likes += 1;
+            state.data[likedPostIndex].likes=action.payload.likes;
           }
         }
        
@@ -92,20 +115,42 @@ const postSlice = createSlice({
       .addCase(likePost.rejected, (state, action: PayloadAction<any>) => {
         state.error = action.payload;
       })
-      .addCase(dislikePost.fulfilled, (state, action) => {
-        const dislikedPost = action.payload;
+      .addCase(dislikePost.fulfilled, (state, action: PayloadAction<Post>) => {
+        state.loading = false;
+
+        // Find the index of the liked post in the state data
         if(state.data!=null){
-          const updatedPosts = state.data.map((post) =>
-          post.id === dislikedPost.id ? dislikedPost : post
-        );
-        state.data = updatedPosts;
+          const likedPostIndex = state.data?.findIndex(
+            (post) => post.id === action.payload.id
+          );
+  
+          // If the liked post is found in the state data, update its like count
+          if (likedPostIndex !== undefined && likedPostIndex !== -1) {
+            state.data[likedPostIndex].likes=action.payload.likes;
+          }
         }
+       
       })
         
        
       .addCase(dislikePost.rejected, (state, action:PayloadAction<any>) => {
         state.error = action.payload;
+      })
+      .addCase(createPost.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(createPost.fulfilled, (state, action: PayloadAction<Post>) => {
+        state.loading = false;
+  
+        // If the new post is successfully created, add it to the state data
+        if (state.data) {
+          state.data.push(action.payload);
+        }
+      })
+      .addCase(createPost.rejected, (state, action: PayloadAction<any>) => {
+        state.error = action.payload;
       });
+    
   },
 });
 

@@ -18,8 +18,12 @@ export default function Home() {
 
     useEffect(() => {
         dispatch(getPosts());
+       
+       
       }, [dispatch]);
       const { loading, data } = useAppSelector(selectPost);
+     
+
   return (
     <div >
       <MobileNavBar/>
@@ -114,7 +118,7 @@ export default function Home() {
   ariaLabel="blocks-loading"
   wrapperStyle={{}}
   wrapperClass=""
-  colors={['#056EF5', '#054AA2', '#18D8EB', '#889BF0', '#121CF3']}
+  colors={['#056EF5', '#121CF3', '#121CF3', '#121CF3', '#121CF3']}
 />
                                           
                                       </div>

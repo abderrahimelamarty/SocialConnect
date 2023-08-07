@@ -24,12 +24,19 @@
     };
 export type Post ={
    id: number;
-   
    userId: number;
    text: string;
    image: string;
    timestamp: Date;
-   likes: number;
+   likes: number[];
    comments: number;
-
+}
+export type Like ={
+  postId:number,
+  userId:number,
+}
+export type PostRequest ={
+  userId: number;
+  content: string;
+  postImageUrl:string;
 }
