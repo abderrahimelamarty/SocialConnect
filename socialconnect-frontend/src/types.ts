@@ -37,6 +37,10 @@ export type Like ={
 }
 export type PostRequest ={
   userId: number;
-  content: string;
-  postImageUrl:string;
+  text: string;
+  image:string;
+}
+export type IFile ={
+  url: string,
+  name: string,
 }

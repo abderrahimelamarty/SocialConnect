@@ -2,33 +2,43 @@ import React, { useRef, useState } from 'react'
 import { AiFillVideoCamera, AiOutlineSmile } from 'react-icons/ai'
 import { BsFillEmojiSmileFill } from 'react-icons/bs'
 import { GrGallery } from 'react-icons/gr'
-import {IoMdPhotos} from'react-icons/io'
+import {IoMdClose, IoMdPhotos} from'react-icons/io'
 import { createPost } from '../../features/posts/postSlice'
 import { useAppDispatch } from '../../store/hooks'
+
 function CreatePost() {
   const [showFilterPostModal, setShowFilterModal] = useState(false);
 
   const [sortPostBy, setSortPostBy] = useState("Latest");
-  const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const [content, setContent] = useState("");
+  const [text, settext] = useState("");
 
-  const [postImageUrl, setPostImageUrl] = useState("");
+  const [image, setImage] = useState("");
 
-  const [isFetching, setIsFetching] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [currentImage, setCurrentImage] = useState<File>();
+  const [previewImage, setPreviewImage] = useState<string>("");
+  const [progress, setProgress] = useState<number>(0);
+  const [message, setMessage] = useState<string>("");
+
   const cloudinaryUrl = "https://api.cloudinary.com/v1_1/dytvl1fnk/image/upload";
 const dispatch=useAppDispatch()
-const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  const file = event.target.files?.[0];
-    setPostImageUrl(file)
+
+const selectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const selectedFiles = event.target.files as FileList;
+  setCurrentImage(selectedFiles?.[0]);
+  setImage(URL.createObjectURL(selectedFiles?.[0]));
+ console.log(image)
 };
+
+
   const postHandler = async (e:React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setLoading(true);
     const userId:number=1;
-    if (postImageUrl) {
-        const file = postImageUrl;
+    if (image) {
+        const file = image;
         const formData = new FormData();
         formData.append("file", file);
         formData.append("upload_preset", "alcon-social");
@@ -41,8 +51,8 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             });
 
             const { url } = await res.json();
-
-            dispatch(createPost({userId,content,postImageUrl}));
+            setImage(url)
+            dispatch(createPost({userId,text,image}));
             setLoading(false);
 
         } catch (err) {
@@ -50,10 +60,10 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         }
         
     } else {
-        dispatch(createPost({userId,content,postImageUrl}));
+        dispatch(createPost({userId,text,image}));
     }
-    setContent("");
-    setPostImageUrl("");
+    settext("");
+    setImage("");
 }
   return (
     <div>
@@ -69,11 +79,11 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
           <div className="flex items-center ml-5 w-full  ">
             <input
               type="text"
-              value={content}
+              value={text}
               placeholder="What's on your mind Joe Doe?"
               className="outline-0 bg-[#f2f3f7] p-1 rounded-full pl-3 w-full h-12 truncate"
           
-              onChange={(e) => setContent(e.target.value)}
+              onChange={(e) => settext(e.target.value)}
             />
           </div>
 
@@ -82,16 +92,22 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
          
           >
             <button className="font-bold text-white"  onClick={postHandler}>
-              {loading ? "Loading" : "Post"}
+              {loading ? "Loading ..." : "Post"}
               
             </button>
           </div>
         </div>
 
-        <div className="">
-          {postImageUrl ? (
-            <div className="" onClick={() => setPostImageUrl("")}>
-              <img src={postImageUrl} className="p-4" alt="" />
+        <div className=" relative">
+          {image ? (
+            <div className="  w-full h-50" onClick={() => setImage("")}>
+              <img src={image} className="p-4" alt="" />
+              <button
+                    className="absolute top-4 right-4 mt-2 mr-2 bg-red-500 text-white p-1 rounded-full"
+                    onClick={() => setImage('')}
+                >
+                    <IoMdClose size={16} />
+                </button>
             </div>
           ) : (
             ""
@@ -103,9 +119,9 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         border-b mb-4 mt-2"
         ></div>
         <div className="flex justify-between px-3 sm:mx-9 pb-3">
-          <div className="flex items-center">
+          <div className="flex items-center hover:bg-slate-100  rounded-3xl">
            
-           < AiFillVideoCamera className="w-7 h-7" color='red'/>
+           < AiFillVideoCamera className="w-6 h-6" color='red'/>
             
             <p className="pl-2   font-bold text-gray-400 whitespace-nowrap text-[14px]">Live Video</p>
           </div>
@@ -114,20 +130,23 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             className="flex items-center"
             // onClick={() => imageRef.current.click()}
           >
+            <label className='flex items-center hover:bg-slate-100   rounded-3xl'>
          
-            < IoMdPhotos className="w-7 h-7" color='#15E882' />
+            < IoMdPhotos className="w-6 h-6" color='#15E882' />
             <input
-                                                className="hidden"
+                                                className="hidden "
                                                 type="file"
-                                                onChange={handleFileChange}
+                                                onChange={selectImage}
                                             />
+                                            
           
             <p className="pl-2 font-bold text-gray-400   text-[14px]">Photo/Video</p>
+            </label>
           </div>
 
-          <div className="flex items-center">
+          <div className="flex items-center hover:bg-slate-100  rounded-3xl">
         
-            <AiOutlineSmile className="w-7 h-7" color='#F5DC05'/>
+            <AiOutlineSmile className="w-6 h-6" color='#F5DC05'/>
           
             <p className="pl-2  font-bold text-gray-400 text-[14px]">Feeling/Activity</p>
           </div>
