@@ -5,7 +5,9 @@ import { GrGallery } from 'react-icons/gr'
 import {IoMdClose, IoMdPhotos} from'react-icons/io'
 import { createPost } from '../../features/posts/postSlice'
 import { useAppDispatch } from '../../store/hooks'
-
+import { uploadImageToCloudinary } from '../../helpers/ImageUpload'
+import { storage } from '../../config/firebase';
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 function CreatePost() {
   const [showFilterPostModal, setShowFilterModal] = useState(false);
 
@@ -21,43 +23,51 @@ function CreatePost() {
   const [previewImage, setPreviewImage] = useState<string>("");
   const [progress, setProgress] = useState<number>(0);
   const [message, setMessage] = useState<string>("");
+  
 
-  const cloudinaryUrl = "https://api.cloudinary.com/v1_1/dytvl1fnk/image/upload";
 const dispatch=useAppDispatch()
 
-const selectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-  const selectedFiles = event.target.files as FileList;
-  setCurrentImage(selectedFiles?.[0]);
-  setImage(URL.createObjectURL(selectedFiles?.[0]));
- console.log(image)
-};
 
+const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const file = event.target.files?.[0];
+
+  if (file) {
+    
+    const storageRef = ref(storage, `files/${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+    uploadTask.on("state_changed",
+      (snapshot) => {
+        const progress =
+          Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        setProgress(progress);
+       
+      },
+      (error) => {
+        alert(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          
+          setImage(downloadURL)
+          console.log(image)
+        });
+      }
+    );
+  }
+};
 
   const postHandler = async (e:React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setLoading(true);
     const userId:number=1;
     if (image) {
-        const file = image;
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", "alcon-social");
-        formData.append("folder", "alcon");
+       
 
-        try {
-            const res = await fetch(cloudinaryUrl, {
-                method: "POST",
-                body: formData,
-            });
-
-            const { url } = await res.json();
-            setImage(url)
+       
             dispatch(createPost({userId,text,image}));
             setLoading(false);
 
-        } catch (err) {
-            console.error("error occured", err);
-        }
+        
         
     } else {
         dispatch(createPost({userId,text,image}));
@@ -136,7 +146,7 @@ const selectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
             <input
                                                 className="hidden "
                                                 type="file"
-                                                onChange={selectImage}
+                                                onChange={handleImageUpload}
                                             />
                                             
           
