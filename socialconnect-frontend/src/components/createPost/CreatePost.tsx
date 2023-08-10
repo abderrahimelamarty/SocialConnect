@@ -30,12 +30,12 @@ const dispatch=useAppDispatch()
 
 const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
   const file = event.target.files?.[0];
-
+   setLoading(true)
   if (file) {
     
     const storageRef = ref(storage, `files/${file.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-    uploadTask.on("state_changed",
+    const   uploadTask = uploadBytesResumable(storageRef, file);
+     uploadTask.on("state_changed",
       (snapshot) => {
         const progress =
           Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
@@ -45,11 +45,11 @@ const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => 
       (error) => {
         alert(error);
       },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          
+     async () => {
+      await   getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log(downloadURL)
           setImage(downloadURL)
-          console.log(image)
+         setLoading(false)
         });
       }
     );
@@ -74,6 +74,11 @@ const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => 
     }
     settext("");
     setImage("");
+}
+const handleDelete=()=>{
+  setImage("");
+ 
+  
 }
   return (
     <div>
@@ -122,6 +127,18 @@ const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => 
           ) : (
             ""
           )}
+            {
+        loading &&
+        
+        
+          
+  <div className="w-80 mx-20 md:mx-10 sm:mx-10 bg-gray-200 rounded-full dark:bg-gray-700">
+    <div className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style={{ width: `${progress}%` }} > {progress}%</div>
+
+
+        </div>
+        
+      }
         </div>
 
         <div
