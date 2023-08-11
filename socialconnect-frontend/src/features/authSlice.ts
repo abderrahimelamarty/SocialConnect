@@ -14,7 +14,7 @@ const initialState: AuthState = user.token
     }
   : {
       isLoggedIn: false,
-      user: { token: '', email: '', name:'' },
+      user: { id:0,token: '', email: '', name:'' },
       error: ''
     };
 
@@ -102,7 +102,7 @@ export const authSlice = createSlice({
       })
       .addCase(logoutAsync.fulfilled, (state) => {
         state.isLoggedIn = false;
-        state.user = { token: '', email:'',name:'' };
+        state.user = {id:0,token: '', email:'',name:'' };
         state.error = '';
       });
   }

@@ -23,21 +23,11 @@ import { FlareSharp } from "@mui/icons-material";
 import { formatDistanceToNow } from "date-fns";
 export const Post = ( {post}:{post:post}) => {
 
-    const [postOptions, setPostOptions] = useState(false);
   const [postId,setPostId]=useState(post?.id);
-  
-    const { pathname } = useLocation();
-
-    // const {
-    //     user: { users },
-    //     auth: { token, userData },
-    //     bookmarks: { bookmarks },
-    // } = useSelector(state => state);
   const {user}=useAppSelector(selectAuth)
-
+const [visible,setVisisble]=useState(false)
     const navigate = useNavigate();
 
-    // const isBookmarked = bookmarks?.find(id => id === post?._id);
     const userId:number=1;
      const isLiked = post?.likes?.find(user => user === userId);
           
@@ -80,8 +70,38 @@ export const Post = ( {post}:{post:post}) => {
       const date = new Date(dateString);
       return formatDistanceToNow(date, { addSuffix: true });
     };
-       const PostDate: string = post.timestamp
+    const showComment=()=>{
+      if(visible){
+        setVisisble(false)
+      }
+      else{
+        setVisisble(true)
+      }
+
+    }
+           const PostDate: string = post.timestamp
       const timeAgoString = getTimeAgo(PostDate);
+      const comments = [
+        {
+          id: 1,
+          image: 'https://img.freepik.com/vecteurs-premium/profil-avatar-homme-icone-ronde_24640-14044.jpg',
+          username: 'user1',
+          comment: 'This is the first comment.',
+        },
+        {
+          id: 2,
+          image: 'https://img.freepik.com/vecteurs-premium/profil-avatar-homme-icone-ronde_24640-14044.jpg',
+          username: 'user2',
+          comment: 'I agree with the first comment.',
+        },
+        {
+          id: 3,
+          image: 'https://img.freepik.com/vecteurs-premium/profil-avatar-homme-icone-ronde_24640-14044.jpg?w=2000',
+          username: 'user3',
+          comment: 'Great discussion!',
+        },
+      ];
+      
     return (
         // <div
         //     className="flex border  ml-0 sm:mr-0 sm:mx-3 pl-2 pr-1 sm:pr-0 sm:px-5 py-3 bg-white hover:bg-slate-100 mt-5  rounded-3xl"
@@ -249,7 +269,7 @@ export const Post = ( {post}:{post:post}) => {
               </p>
             </div>
             <p className="whitespace-nowrap text-[15px] sm:text-[16px]">
-              {`${post.comments} Comments`}
+              {`${comments.length} Comments`}
             </p>
           </div>
   
@@ -272,7 +292,7 @@ export const Post = ( {post}:{post:post}) => {
                         )}
               <p className="pl-2 text-[18px]">Like</p>
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center cursor-pointer" onClick={showComment}>
               <FaRegCommentAlt className="w-5 h-5" />
               <p className="pl-2 text-[18px]">Comment</p>
             </div>
@@ -288,58 +308,64 @@ export const Post = ( {post}:{post:post}) => {
         </div>
   
         {/* Comment Section*/}
+        {
+          visible && 
+          <div >
         <div className="max-h-60  overflow-y-auto  ">
-          {/* <div className="flex justify-between text-[#8e8d8d]  ">
-            <p>{`See ${post.comments} previous comments`}</p>
+          <div className="flex justify-between text-[#8e8d8d]  ">
+            <p>{`See ${comments.length} previous comments`}</p>
             <div className="flex items-center">
               
          
             </div>
-          </div> */}
+          </div>
           <div className=" ">
             {/* First Comment */}
-            {/* {comments.map((comment) => (
+            {comments.map((comment) => (
               <div key={comment.id} className="">
                 <div className="flex items-center mt-3">
                   <div className="w-10 h-10">
-                    <img src={comment.data().image} className="rounded-full" />
+                    <img src={comment.image} className="rounded-full" />
                   </div>
-                  <p className="ml-2 font-bold">{comment.data().username}</p>
-                  <p className="ml-2 ">{comment.data().comment}</p>
+                  <p className="ml-2 font-bold">{comment.username}</p>
+                  <p className="ml-2 ">{comment.comment}</p>
                 </div>
-                <div className="ml-[3rem] flex -mt-1.5">
+                {/* <div className="ml-[3rem] flex -mt-1.5">
                   <p className="mr-2">Like </p>
                   <p>Reply </p>
-                </div>
+                </div> */}
               </div>
-            ))} */}
+            ))}
           </div>
         </div>
         {/* Input*/}
-        {/* <div className="flex items-center mt-4"> */}
-          {/* <div className=" w-10 h-10 shrink-0">
+        <div className="flex items-center mt-4">
+          <div className=" w-10 h-10 shrink-0">
             <img
-              src=""
+              src="https://img.freepik.com/vecteurs-premium/profil-avatar-homme-icone-ronde_24640-14044.jpg"
               className="rounded-full "
             />
-          </div> */}
-          {/* <div className="w-full ml-2 bg-[#f2f3f7] rounded-full flex items-center relative">
+          </div>
+          <div className="w-full ml-2 bg-[#f2f3f7] rounded-full flex items-center relative">
             <input
               type="text"
               placeholder="Write a comment "
               className="outline-0  p-2 rounded-full w-full bg-[#f2f3f7]"
             //   value={comment}
             //   onChange={(e) => setComment(e.target.value)}
-            /> */}
+            />
           
   
-            {/* <div className="mr-4 bg-blue-400 text-white rounded-full">
+            <div className="mr-4 bg-blue-400 text-white rounded-full">
               <button className="font-bold  px-2 ">
                 Post
               </button>
-            </div> */}
-          {/* </div> */}
-        {/* </div> */}
+            </div>
+          </div>
+        </div>
+        </div>
+        }
+        
       </div>
     )
 };

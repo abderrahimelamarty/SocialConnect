@@ -15,16 +15,17 @@ export const AsideRight = () => {
     const dispatch = useDispatch();
     const users: User[] = [
       {
+        id:1,
         token: "abc123",
         email: "john@example.com",
         name: "John Doe",
       },
-      {
+      {id:1,
         token: "xyz456",
         email: "jane@example.com",
         name: "Jane Smith",
       },
-      {
+      {id:1,
         token: "123qwe",
         email: "bob@example.com",
         name: "Bob Johnson",
