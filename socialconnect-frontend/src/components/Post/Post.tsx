@@ -20,6 +20,7 @@ import { AiFillHeart, AiOutlineCamera, AiOutlineGif, AiOutlineHeart } from "reac
 import { FaRegCommentAlt, FaShare } from "react-icons/fa";
 import {PiShareFatBold} from'react-icons/pi'
 import { FlareSharp } from "@mui/icons-material";
+import { formatDistanceToNow } from "date-fns";
 export const Post = ( {post}:{post:post}) => {
 
     const [postOptions, setPostOptions] = useState(false);
@@ -74,7 +75,13 @@ export const Post = ( {post}:{post:post}) => {
     //     dispatch(followUser({ followUserId: currentUser?._id, token }));
     //     setPostOptions(false);
     // }
-
+    
+    const getTimeAgo = (dateString: string): string => {
+      const date = new Date(dateString);
+      return formatDistanceToNow(date, { addSuffix: true });
+    };
+       const PostDate: string = post.timestamp
+      const timeAgoString = getTimeAgo(PostDate);
     return (
         // <div
         //     className="flex border  ml-0 sm:mr-0 sm:mx-3 pl-2 pr-1 sm:pr-0 sm:px-5 py-3 bg-white hover:bg-slate-100 mt-5  rounded-3xl"
@@ -209,8 +216,8 @@ export const Post = ( {post}:{post:post}) => {
               <p className="font-bold ">{user.name}</p>
               <div className="flex">
                 <p className="text-xs">
-                    36 minutes ago
-                  {/* <Moment fromNow>{t?.toDate()}</Moment> &#8226;{" "} */}
+                  
+                  {timeAgoString}
                 </p>
                 <BiWorld className="ml-1 shrink-0" />
               </div>

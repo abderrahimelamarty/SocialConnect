@@ -27,7 +27,7 @@ export type Post ={
    userId: number;
    text: string;
    image: string;
-   timestamp: Date;
+   timestamp: string;
    likes: number[];
    comments: number;
 }
