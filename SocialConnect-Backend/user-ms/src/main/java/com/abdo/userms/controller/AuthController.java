@@ -42,6 +42,7 @@ public class AuthController {
             loginResponse.setName(user.getUsername());
             // Assuming you have user details in the 'user' object
             loginResponse.setEmail(user.getEmail());
+            loginResponse.setId(user.getId());
           return new ResponseEntity<>(loginResponse, HttpStatus.OK) ;
         } else {
             throw new RuntimeException("invalid access");

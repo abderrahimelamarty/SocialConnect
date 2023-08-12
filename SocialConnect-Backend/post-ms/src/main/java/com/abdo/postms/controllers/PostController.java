@@ -1,7 +1,9 @@
 package com.abdo.postms.controllers;
 
+import com.abdo.postms.entities.Comment;
 import com.abdo.postms.entities.Post;
 import com.abdo.postms.exceptions.ResourceNotFoundException;
+import com.abdo.postms.models.Like;
 import com.abdo.postms.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,6 +41,18 @@ public class PostController {
 
         return postService.savePost(post);
     }
+    @PostMapping("/{postId}/comments")
+    public ResponseEntity<Post> addCommentToPost(
+            @PathVariable Long postId,
+            @RequestBody Comment comment) {
+        Post updatedPost = postService.addCommentToPost(postId, comment);
+
+        if (updatedPost != null) {
+            return ResponseEntity.ok(updatedPost);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @PutMapping("/{id}")
     public Post updatePost(@PathVariable Long id, @RequestBody Post post) {
@@ -53,9 +67,13 @@ public class PostController {
         return null;
     }
 
-    @PostMapping("/{postId}/like")
-    public ResponseEntity<Post> likePost(@PathVariable Long postId) {
-       return ResponseEntity.ok(postService.likePost(postId));
+    @PostMapping("/{postId}/dislike/{userId}")
+    public ResponseEntity<Post> likePost(@PathVariable Long postId , @PathVariable Long userId) {
+       return ResponseEntity.ok(postService.dislikePost(postId,userId));
+    }
+    @PostMapping("/{postId}/like/{userId}")
+    public ResponseEntity<Post> dislikelikePost(@PathVariable Long postId , @PathVariable Long userId) {
+        return ResponseEntity.ok(postService.likePost(postId,userId));
     }
 
     @DeleteMapping("/{id}")

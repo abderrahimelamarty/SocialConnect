@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
  @Data
 public class CustomUserDetails implements UserDetails {
-
+private Long id;
     private String username;
     private String password;
 
@@ -17,6 +17,7 @@ public class CustomUserDetails implements UserDetails {
         this.username = userCredential.getName();
         this.password = userCredential.getPassword();
         this.email=userCredential.getEmail();
+        this.id=userCredential.getId();
     }
 
     @Override
