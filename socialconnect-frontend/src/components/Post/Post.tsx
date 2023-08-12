@@ -28,7 +28,7 @@ export const Post = ( {post}:{post:post}) => {
 const [visible,setVisisble]=useState(false)
     const navigate = useNavigate();
 
-    const userId:number=1;
+    const userId:number=user.id;
      const isLiked = post?.likes?.find(user => user === userId);
           
           const isBookmarked =false;
