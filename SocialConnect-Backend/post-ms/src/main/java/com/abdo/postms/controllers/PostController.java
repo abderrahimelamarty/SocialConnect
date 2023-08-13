@@ -4,6 +4,7 @@ import com.abdo.postms.entities.Comment;
 import com.abdo.postms.entities.Post;
 import com.abdo.postms.exceptions.ResourceNotFoundException;
 import com.abdo.postms.models.Like;
+import com.abdo.postms.repositories.CommentRepository;
 import com.abdo.postms.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,11 +30,21 @@ public class PostController {
         return postService.getAllPosts();
     }
 
-
+    @Autowired
+    private CommentRepository commentRepository;
 
     @GetMapping("/{id}")
     public Post getPostById(@PathVariable Long id) {
         return postService.getPostById(id);
+    }
+    @GetMapping("/PostswithComments")
+    public List<Post> getPostswithComment() {
+        List<Post> posts=postService.getAllPosts();
+        for(int i=0;i<posts.size();i++){
+            List<Comment> comments = commentRepository.findByPostId(posts.get(i).getId());
+            posts.get(i).setComments(comments);
+        }
+        return posts;
     }
 
     @PostMapping
@@ -41,18 +52,18 @@ public class PostController {
 
         return postService.savePost(post);
     }
-    @PostMapping("/{postId}/comments")
-    public ResponseEntity<Post> addCommentToPost(
-            @PathVariable Long postId,
-            @RequestBody Comment comment) {
-        Post updatedPost = postService.addCommentToPost(postId, comment);
-
-        if (updatedPost != null) {
-            return ResponseEntity.ok(updatedPost);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+//    @PostMapping("/{postId}/comments")
+//    public ResponseEntity<Post> addCommentToPost(
+//            @PathVariable Long postId,
+//            @RequestBody Comment comment) {
+//        Post updatedPost = postService.addCommentToPost(postId, comment);
+//
+//        if (updatedPost != null) {
+//            return ResponseEntity.ok(updatedPost);
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
     @PutMapping("/{id}")
     public Post updatePost(@PathVariable Long id, @RequestBody Post post) {

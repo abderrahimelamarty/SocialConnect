@@ -21,13 +21,13 @@ public class Comment {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "tutorial_id", nullable = false)
+    @JoinColumn(name = "post_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Post post;
 
     private String username;
-    private String text;
+    private String content;
     private LocalDateTime timestamp;
 
 

@@ -17,13 +17,13 @@ import java.util.List;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
+    private Long id;
     private Long userId;
     private String text;
     private String image;
     private LocalDateTime timestamp;
     @Column(length = 65555)
     private List<Long> likes;
-    @OneToMany(mappedBy="postId")
+@ElementCollection
     private List<Comment> comments;
 }

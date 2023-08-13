@@ -31,18 +31,18 @@ public class PostService {
         ));
 
     }
-    public Post addCommentToPost(Long postId, Comment comment) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException(
-                "post with id [%s] not found".formatted(postId)
-        ));
-
-
-            comment.setPostId(postId);
-            Comment savedComment = commentRepository.save(comment);
-            post.getComments().add(savedComment);
-            return postRepository.save(post);
-
-    }
+//    public Post addCommentToPost(Long postId, Comment comment) {
+//        Post post = postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException(
+//                "post with id [%s] not found".formatted(postId)
+//        ));
+//
+//
+//            comment.setPostId(postId);
+//            Comment savedComment = commentRepository.save(comment);
+//            post.getComments().add(savedComment);
+//            return postRepository.save(post);
+//
+//    }
     public List<Post> getPostsByUser(Long userId){
         List<Post>posts =postRepository.findByUserId(userId);
         return posts;
