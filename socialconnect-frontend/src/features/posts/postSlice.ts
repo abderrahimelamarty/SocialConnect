@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
-import {Like, Post, PostRequest} from "../../types";
+import {CommentRequest, Like, Post, PostRequest} from "../../types";
 import { RootState } from "../../store/store";
  
-const URL:string="http://localhost:8083/api/posts"
+const URL:string="http://localhost:8083/api/posts/PostswithComments"
 export const getPosts = createAsyncThunk(
   "posts/getPosts",
   async (data, thunkApi) => {
@@ -13,6 +13,18 @@ export const getPosts = createAsyncThunk(
         URL
       );
       console.log(response.data)
+      return response.data;
+    } catch (error: any) {
+      const message = error.message;
+      return thunkApi.rejectWithValue(message);
+    }
+  }
+);
+export const addComment = createAsyncThunk(
+  "posts/addComment",
+  async (comment: CommentRequest, thunkApi) => {
+    try {
+      const response = await axios.post<Comment>(`${URL}/${comment.postId}/comments`, comment);
       return response.data;
     } catch (error: any) {
       const message = error.message;
@@ -149,9 +161,30 @@ const postSlice = createSlice({
       })
       .addCase(createPost.rejected, (state, action: PayloadAction<any>) => {
         state.error = action.payload;
-      });
-    
+      })
+       .addCase(addComment.pending, (state, action) => {
+      state.loading = true;
+    })
+    .addCase(addComment.fulfilled, (state, action: PayloadAction<any>) => {
+      state.loading = false;
+
+      // Find the post to which the comment was added
+      const postIndex = state.data?.findIndex((post) => post.id === action.payload.postId);
+
+      // If the post is found, add the new comment to its comments array
+      if (postIndex !== undefined && postIndex !== -1) {
+        if (!state.data![postIndex].comments) {
+          state.data![postIndex].comments = [];
+        }
+        state.data![postIndex].comments.push(action.payload);
+      }
+    })
+    .addCase(addComment.rejected, (state, action: PayloadAction<any>) => {
+      state.error = action.payload;
+    });
   },
+    
+  
 });
 
 export const selectPost= (state: RootState) => state.post;

@@ -30,7 +30,14 @@ export type Post ={
    image: string;
    timestamp: string;
    likes: number[];
-   comments: number;
+   comments: Comment[];
+}
+export type Comment ={
+  id:string,
+ username:string,
+ content:string,
+ timestamp: string;
+  
 }
 export type Like ={
   postId:number,
@@ -40,6 +47,11 @@ export type PostRequest ={
   userId: number;
   text: string;
   image:string;
+}
+export type CommentRequest ={
+  postId: number;
+  content: string;
+  username:string;
 }
 export type IFile ={
   url: string,

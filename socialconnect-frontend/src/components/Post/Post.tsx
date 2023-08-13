@@ -269,7 +269,7 @@ const [visible,setVisisble]=useState(false)
               </p>
             </div>
             <p className="whitespace-nowrap text-[15px] sm:text-[16px]">
-              {`${comments.length} Comments`}
+              {`${post.comments.length} Comments`}
             </p>
           </div>
   
@@ -313,7 +313,7 @@ const [visible,setVisisble]=useState(false)
           <div >
         <div className="max-h-60  overflow-y-auto  ">
           <div className="flex justify-between text-[#8e8d8d]  ">
-            <p>{`See ${comments.length} previous comments`}</p>
+            <p>{`See ${post.comments.length} previous comments`}</p>
             <div className="flex items-center">
               
          
@@ -321,14 +321,14 @@ const [visible,setVisisble]=useState(false)
           </div>
           <div className=" ">
             {/* First Comment */}
-            {comments.map((comment) => (
+            {post.comments.map((comment) => (
               <div key={comment.id} className="">
                 <div className="flex items-center mt-3">
                   <div className="w-10 h-10">
-                    <img src={comment.image} className="rounded-full" />
+                    <img src="https://img.freepik.com/vecteurs-premium/profil-avatar-homme-icone-ronde_24640-14044.jpg" className="rounded-full" />
                   </div>
                   <p className="ml-2 font-bold">{comment.username}</p>
-                  <p className="ml-2 ">{comment.comment}</p>
+                  <p className="ml-2 ">{comment.content}</p>
                 </div>
                 {/* <div className="ml-[3rem] flex -mt-1.5">
                   <p className="mr-2">Like </p>
