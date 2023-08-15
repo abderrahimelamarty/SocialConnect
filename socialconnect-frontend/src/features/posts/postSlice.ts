@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
-import {CommentRequest, Like, Post, PostRequest} from "../../types";
+import {CommentRequest, CommentResponse, Like, Post, PostRequest} from "../../types";
 import { RootState } from "../../store/store";
  
 const URL:string="http://localhost:8083/api/posts/PostswithComments"
