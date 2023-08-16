@@ -3,6 +3,7 @@ package com.abdo.postms.controllers;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.abdo.postms.dto.CommentDTO;
 import com.abdo.postms.entities.Comment;
 import com.abdo.postms.exceptions.ResourceNotFoundException;
 import com.abdo.postms.repositories.CommentRepository;
@@ -52,15 +53,20 @@ public class CommentController {
     }
 
     @PostMapping("/posts/{postId}/comments")
-    public ResponseEntity<Comment> createComment(@PathVariable(value = "postId") Long tutorialId,
+    public ResponseEntity<CommentDTO> createComment(@PathVariable(value = "postId") Long tutorialId,
                                                  @RequestBody Comment commentRequest) {
         Comment comment = postRepository.findById(tutorialId).map(post -> {
             commentRequest.setPost(post);
             commentRequest.setTimestamp(LocalDateTime.now());
             return commentRepository.save(commentRequest);
         }).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = " + tutorialId));
+        CommentDTO commentDTO=new CommentDTO();
+        commentDTO.setContent(comment.getContent());
+        commentDTO.setTimestamp(comment.getTimestamp());
+        commentDTO.setPostId(tutorialId);
+        commentDTO.setUsername(comment.getUsername());
 
-        return new ResponseEntity<>(comment, HttpStatus.CREATED);
+        return new ResponseEntity<>(commentDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/comments/{id}")
