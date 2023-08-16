@@ -24,7 +24,8 @@ export const addComment = createAsyncThunk(
   "posts/addComment",
   async (comment: CommentRequest, thunkApi) => {
     try {
-      const response = await axios.post<Comment>(`${URL}/${comment.postId}/comments`, comment);
+      const URL = `http://localhost:8083/api/posts/${comment.postId}/comments`;
+      const response = await axios.post<Comment>(URL, comment);
       return response.data;
     } catch (error: any) {
       const message = error.message;

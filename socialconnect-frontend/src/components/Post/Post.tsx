@@ -14,7 +14,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Post as post } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { selectAuth } from "../../features/authSlice";
-import { dislikePost, likePost } from "../../features/posts/postSlice";
+import { addComment, dislikePost, likePost } from "../../features/posts/postSlice";
 import { BiSmile, BiWorld } from "react-icons/bi";
 import { AiFillHeart, AiOutlineCamera, AiOutlineGif, AiOutlineHeart } from "react-icons/ai";
 import { FaRegCommentAlt, FaShare } from "react-icons/fa";
@@ -28,12 +28,13 @@ export const Post = ( {post}:{post:post}) => {
 const [visible,setVisisble]=useState(false)
     const navigate = useNavigate();
 
-    const userId:number=user.id;
-     const isLiked = post?.likes?.find(user => user === userId);
+         const userId:number=user.id;
+         const username:string=user.name;
+           const isLiked = post?.likes?.find(user => user === userId);
           
           const isBookmarked =false;
           const dispatch = useAppDispatch();
-          
+          const [content,setContent]=useState("")
             
 
           
@@ -81,26 +82,13 @@ const [visible,setVisisble]=useState(false)
     }
            const PostDate: string = post.timestamp
       const timeAgoString = getTimeAgo(PostDate);
-      const comments = [
-        {
-          id: 1,
-          image: 'https://img.freepik.com/vecteurs-premium/profil-avatar-homme-icone-ronde_24640-14044.jpg',
-          username: 'user1',
-          comment: 'This is the first comment.',
-        },
-        {
-          id: 2,
-          image: 'https://img.freepik.com/vecteurs-premium/profil-avatar-homme-icone-ronde_24640-14044.jpg',
-          username: 'user2',
-          comment: 'I agree with the first comment.',
-        },
-        {
-          id: 3,
-          image: 'https://img.freepik.com/vecteurs-premium/profil-avatar-homme-icone-ronde_24640-14044.jpg?w=2000',
-          username: 'user3',
-          comment: 'Great discussion!',
-        },
-      ];
+     
+      const handleAddCommnet=(e:React.MouseEvent<HTMLButtonElement>)=>{
+        e.preventDefault()
+        dispatch(addComment({postId,username,content}))
+
+
+      }
       
     return (
         // <div
@@ -351,13 +339,13 @@ const [visible,setVisisble]=useState(false)
               type="text"
               placeholder="Write a comment "
               className="outline-0  p-2 rounded-full w-full bg-[#f2f3f7]"
-            //   value={comment}
-            //   onChange={(e) => setComment(e.target.value)}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
             />
           
   
             <div className="mr-4 bg-blue-400 text-white rounded-full">
-              <button className="font-bold  px-2 ">
+              <button className="font-bold  px-2 " onClick={handleAddCommnet}>
                 Post
               </button>
             </div>
