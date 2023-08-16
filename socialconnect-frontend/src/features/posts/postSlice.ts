@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
-import {CommentRequest, CommentResponse, Like, Post, PostRequest} from "../../types";
+import {CommentRequest, Comment, Like, Post, PostRequest} from "../../types";
 import { RootState } from "../../store/store";
  
 const URL:string="http://localhost:8083/api/posts/PostswithComments"
@@ -165,12 +165,10 @@ const postSlice = createSlice({
        .addCase(addComment.pending, (state, action) => {
       state.loading = true;
     })
-    .addCase(addComment.fulfilled, (state, action: PayloadAction<any>) => {
+    .addCase(addComment.fulfilled, (state, action: PayloadAction<Comment>) => {
       state.loading = false;
-
       // Find the post to which the comment was added
       const postIndex = state.data?.findIndex((post) => post.id === action.payload.postId);
-
       // If the post is found, add the new comment to its comments array
       if (postIndex !== undefined && postIndex !== -1) {
         if (!state.data![postIndex].comments) {
