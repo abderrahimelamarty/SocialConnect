@@ -33,9 +33,9 @@ export type Post ={
    comments: Comment[];
 }
 export type Comment ={
-  id:string,
-  postId:string;
-  username:string,
+   id:string,
+    postId:string;
+   username:string,
    content:string,
    timestamp: string;
   
