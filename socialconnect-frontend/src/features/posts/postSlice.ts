@@ -33,6 +33,19 @@ export const addComment = createAsyncThunk(
     }
   }
 );
+export const deleteComment = createAsyncThunk(
+  "posts/deleteComment",
+  async (comment:Comment, thunkApi) => {
+    try {
+      const URL = `http://localhost:8082/POST-SERVICE/api/comments/${comment.id}`;
+      await axios.delete(URL);
+      return comment;
+    } catch (error: any) {
+      const message = error.message;
+      return thunkApi.rejectWithValue(message);
+    }
+  }
+);
 export const createPost = createAsyncThunk(
   "posts/createPost",
   async (newPost: PostRequest, thunkApi) => {
@@ -164,10 +177,10 @@ const postSlice = createSlice({
         state.error = action.payload;
       })
        .addCase(addComment.pending, (state, action) => {
-      state.loading = true;
+    
     })
     .addCase(addComment.fulfilled, (state, action: PayloadAction<Comment>) => {
-      state.loading = false;
+  
       // Find the post to which the comment was added
       const postIndex = state.data?.findIndex((post) => post.id === action.payload.postId);
       // If the post is found, add the new comment to its comments array
@@ -180,8 +193,27 @@ const postSlice = createSlice({
     })
     .addCase(addComment.rejected, (state, action: PayloadAction<any>) => {
       state.error = action.payload;
+    })
+     .addCase(deleteComment.pending, (state) => {
+    
+    })
+    .addCase(deleteComment.fulfilled, (state, action:PayloadAction<Comment>) => {
+      // Find the post that contains the comment to be deleted
+      const postIndex = state.data?.findIndex((post) => post.id === action.payload.postId);
+      
+      if (postIndex !== undefined && postIndex !== -1) {
+        // Remove the comment from the post's comments array
+        state.data![postIndex].comments = state.data![postIndex].comments.filter(comment => comment.id !== action.payload.id);
+      }
+
+      state.loading = false;
+    })
+    .addCase(deleteComment.rejected, (state, action:PayloadAction<any>) => {
+      state.loading = false;
+      state.error = action.payload;
     });
-  },
+},
+
     
   
 });

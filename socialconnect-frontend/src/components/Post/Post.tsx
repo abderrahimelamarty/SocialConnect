@@ -1,13 +1,10 @@
 import { useState } from "react";
-import { HiDotsHorizontal, HiShare } from "react-icons/hi";
-import { GoComment } from "react-icons/go";
+
 import { BsSuitHeart, BsSuitHeartFill } from "react-icons/bs";
-import { MdOutlineBookmarkBorder, MdOutlineBookmark } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
-// import { getFormattedDate } from "../utilities/getFormattedDate";
 
 
-import { RiArrowDownSLine } from "react-icons/ri";
+
+
 
 
 import { useLocation, useNavigate } from "react-router-dom";
@@ -16,7 +13,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { selectAuth } from "../../features/authSlice";
 import { addComment, dislikePost, likePost } from "../../features/posts/postSlice";
 import { BiSmile, BiWorld } from "react-icons/bi";
-import { AiFillHeart, AiOutlineCamera, AiOutlineGif, AiOutlineHeart } from "react-icons/ai";
+import { AiFillDelete, AiFillHeart, AiOutlineCamera, AiOutlineGif, AiOutlineHeart } from "react-icons/ai";
 import { FaRegCommentAlt, FaShare } from "react-icons/fa";
 import {PiShareFatBold} from'react-icons/pi'
 import { FlareSharp } from "@mui/icons-material";
@@ -86,9 +83,11 @@ const [visible,setVisisble]=useState(false)
       const handleAddCommnet=(e:React.MouseEvent<HTMLButtonElement>)=>{
         e.preventDefault()
         dispatch(addComment({postId,username,content}))
+        setContent("")
 
 
       }
+      
       
     return (
         // <div
@@ -317,11 +316,17 @@ const [visible,setVisisble]=useState(false)
                   </div>
                   <p className="ml-2 font-bold">{comment.username}</p>
                   <p className="ml-2 ">{comment.content}</p>
+                  {
+                    user.name==comment.username &&(
+                      <AiFillDelete className="ml-4 " />
+                    )
+                  }
                 </div>
-                {/* <div className="ml-[3rem] flex -mt-1.5">
-                  <p className="mr-2">Like </p>
-                  <p>Reply </p>
-                </div> */}
+                <div className="ml-[3rem] flex -mt-1.5">
+                  <p className="text-xs text-gray-600">{getTimeAgo(comment.timestamp)}</p>
+                 
+                
+                </div>
               </div>
             ))}
           </div>
