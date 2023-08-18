@@ -71,6 +71,7 @@ const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => 
         
     } else {
         dispatch(createPost({userId,text,image}));
+        setLoading(false);
     }
     settext("");
     setImage("");

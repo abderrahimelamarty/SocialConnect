@@ -26,6 +26,7 @@ export const addComment = createAsyncThunk(
     try {
       const URL = `http://localhost:8083/api/posts/${comment.postId}/comments`;
       const response = await axios.post<Comment>(URL, comment);
+      console.log(response.data)
       return response.data;
     } catch (error: any) {
       const message = error.message;
@@ -46,9 +47,23 @@ export const deleteComment = createAsyncThunk(
     }
   }
 );
+export const deletePost = createAsyncThunk(
+  "posts/deletePost",
+  async (postId:number, thunkApi) => {
+    try {
+      const URL = `http://localhost:8083/api/posts/${postId}`;
+      await axios.delete(URL);
+      return postId;
+    } catch (error: any) {
+      const message = error.message;
+      return thunkApi.rejectWithValue(message);
+    }
+  }
+);
 export const createPost = createAsyncThunk(
   "posts/createPost",
   async (newPost: PostRequest, thunkApi) => {
+    const URL="http://localhost:8083/api/posts"
     try {
       // Replace the URL with the actual endpoint to create a new post
       const response = await axios.post<Post>(URL, newPost);
@@ -211,7 +226,25 @@ const postSlice = createSlice({
     .addCase(deleteComment.rejected, (state, action:PayloadAction<any>) => {
       state.loading = false;
       state.error = action.payload;
+    })
+    .addCase(deletePost.pending, (state) => {
+      
+      state.error = null;
+    })
+    .addCase(deletePost.fulfilled, (state, action) => {
+      if (state.data) {
+        // Remove the deleted post from the data array
+        state.data = state.data.filter(post => post.id !== action.payload);
+      }
+      state.loading = false;
+    })
+    .addCase(deletePost.rejected, (state, action:PayloadAction<any>) => {
+      state.loading = false;
+      state.error = action.payload;
     });
+  
+
+ 
 },
 
     

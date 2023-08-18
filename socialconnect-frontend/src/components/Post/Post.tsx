@@ -11,18 +11,20 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Post as post } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { selectAuth } from "../../features/authSlice";
-import { addComment, deleteComment, dislikePost, likePost } from "../../features/posts/postSlice";
+import { addComment, deleteComment, deletePost, dislikePost, likePost } from "../../features/posts/postSlice";
 import { BiSmile, BiWorld } from "react-icons/bi";
 import { AiFillDelete, AiFillHeart, AiOutlineCamera, AiOutlineGif, AiOutlineHeart } from "react-icons/ai";
 import { FaRegCommentAlt, FaShare } from "react-icons/fa";
 import {PiShareFatBold} from'react-icons/pi'
 import { FlareSharp } from "@mui/icons-material";
+import {HiDotsHorizontal} from 'react-icons/hi'
 import { formatDistanceToNow } from "date-fns";
 export const Post = ( {post}:{post:post}) => {
 
   const [postId,setPostId]=useState(post?.id);
   const {user}=useAppSelector(selectAuth)
-const [visible,setVisisble]=useState(false)
+  const [postOptions, setPostOptions] = useState(false);
+     const [visible,setVisisble]=useState(false)
     const navigate = useNavigate();
 
          const userId:number=user.id;
@@ -46,11 +48,11 @@ const [visible,setVisisble]=useState(false)
     //     setPostOptions(false);
     // }
 
-    // const deletePostHandler = (e) => {
-    //     e.stopPropagation();
-    //     dispatch(deletePost({ postId: post?._id, token }));
-    //     setPostOptions(false);
-    // }
+    const deletePostHandler = (e:React.MouseEvent<HTMLLIElement>) => {
+        e.preventDefault();
+        dispatch(deletePost(post.id));
+        setPostOptions(false);
+    }
 
     // const unFollowHandler = (e) => {
     //     e.stopPropagation();
@@ -217,7 +219,7 @@ const [visible,setVisisble]=useState(false)
         // </div>
         <div className="bg-white rounded-[1rem] px-5 py-4 mt-4">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between relative">
           <div className="flex items-center ">
             <div className="w-12 h-12">
               <img src="https://img.freepik.com/premium-vector/young-man-anime-style-character-vector-illustration-design-manga-anime-boy_147933-2539.jpg" className="rounded-full w-12 h-12" />
@@ -234,10 +236,26 @@ const [visible,setVisisble]=useState(false)
             </div>
           </div>
   
-          <div className="w-5 h-5">
-            <img src="https://miro.medium.com/v2/resize:fit:0/1*Js0Y20MwjcTnVAe7KjDXNg.png" />
+          <div className="w-5 h-5" >
+          <HiDotsHorizontal className="cursor-pointer mr-3 w-5 h-5" onClick={() => setPostOptions(prev => !prev)} />
           </div>
+          {
+        user.name=="abdelah" && (
+postOptions && 
+
+<div
+className="w-30 h-22 px-1 shadow-xl bg-white border border-slate-300 text-slate-600 font-semibold 
+    absolute right-7 top-0 z-20 rounded-xl">
+<ul className="p-0.5 cursor-pointer text-start">
+    <li className="my-1 p-1 hover:bg-slate-200 rounded" >Edit Post</li>
+    <li className="my-1 p-1 hover:bg-slate-200 rounded" onClick={deletePostHandler}>Delete Post</li>
+</ul>
+</div>
+        )
+        }
         </div>
+
+       
         {/* Input */}
         <div className="my-3  ">
           <p>{post.text}</p>
@@ -318,10 +336,10 @@ const [visible,setVisisble]=useState(false)
                     <img src="https://img.freepik.com/vecteurs-premium/profil-avatar-homme-icone-ronde_24640-14044.jpg" className="rounded-full" />
                   </div>
                   <p className="ml-2 font-bold">{comment.username}</p>
-                  <p className="ml-2 ">{comment.content}</p>
+                  <p className="ml-2 ">{comment.content} + {comment.id}</p>
                   {
                     user.name==comment.username &&(
-                      <AiFillDelete className="ml-4 "  onClick={()=>handleDeleteCommnet(comment.id)}/>
+                      <AiFillDelete className="ml-4 "  onClick={()=>handleDeleteCommnet(comment?.id)}/>
                     )
                   }
                 </div>
