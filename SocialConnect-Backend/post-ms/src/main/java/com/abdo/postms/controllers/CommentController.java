@@ -61,6 +61,7 @@ public class CommentController {
             return commentRepository.save(commentRequest);
         }).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = " + tutorialId));
         CommentDTO commentDTO=new CommentDTO();
+        commentDTO.setId(comment.getId());
         commentDTO.setContent(comment.getContent());
         commentDTO.setTimestamp(comment.getTimestamp());
         commentDTO.setPostId(tutorialId);
