@@ -11,7 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Post as post } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { selectAuth } from "../../features/authSlice";
-import { addComment, dislikePost, likePost } from "../../features/posts/postSlice";
+import { addComment, deleteComment, dislikePost, likePost } from "../../features/posts/postSlice";
 import { BiSmile, BiWorld } from "react-icons/bi";
 import { AiFillDelete, AiFillHeart, AiOutlineCamera, AiOutlineGif, AiOutlineHeart } from "react-icons/ai";
 import { FaRegCommentAlt, FaShare } from "react-icons/fa";
@@ -87,7 +87,10 @@ const [visible,setVisisble]=useState(false)
 
 
       }
-      
+      const handleDeleteCommnet=(id:number)=>{
+        
+        dispatch(deleteComment({id,postId,username,content}))
+      }
       
     return (
         // <div
@@ -318,7 +321,7 @@ const [visible,setVisisble]=useState(false)
                   <p className="ml-2 ">{comment.content}</p>
                   {
                     user.name==comment.username &&(
-                      <AiFillDelete className="ml-4 " />
+                      <AiFillDelete className="ml-4 "  onClick={()=>handleDeleteCommnet(comment.id)}/>
                     )
                   }
                 </div>

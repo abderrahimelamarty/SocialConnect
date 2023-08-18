@@ -35,9 +35,9 @@ export const addComment = createAsyncThunk(
 );
 export const deleteComment = createAsyncThunk(
   "posts/deleteComment",
-  async (comment:Comment, thunkApi) => {
+  async (comment:any, thunkApi) => {
     try {
-      const URL = `http://localhost:8082/POST-SERVICE/api/comments/${comment.id}`;
+      const URL = `http://localhost:8083/api/comments/${comment.id}`;
       await axios.delete(URL);
       return comment;
     } catch (error: any) {
