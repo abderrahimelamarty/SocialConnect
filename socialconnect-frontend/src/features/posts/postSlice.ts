@@ -110,18 +110,32 @@ interface PostState {
   loading: boolean;
   error: string | null;
   data: Post[] | null;
+  showPostModal:boolean;
+  editPostObj: any,
 }
 
 const initialState = {
   loading: false,
   error: null,
   data: null,
+  showPostModal: false,
+  editPostObj: null,
 } as PostState;
 
 const postSlice = createSlice({
   name: "post",
   initialState,
-  reducers: {},
+  reducers: {
+    openPostModal: state => {
+        state.showPostModal = true;
+    },
+    closePostModal: state => {
+        state.showPostModal = false;
+    },
+    setEditPostObj: (state, { payload }) => {
+        state.editPostObj = payload;
+    },
+},
   extraReducers(builder) {
     builder
       .addCase(getPosts.pending, (state, action) => {
@@ -250,8 +264,6 @@ const postSlice = createSlice({
     
   
 });
-
+export const { setEditPostObj, closePostModal, openPostModal } = postSlice.actions
 export const selectPost= (state: RootState) => state.post;
-
-
 export default postSlice.reducer;

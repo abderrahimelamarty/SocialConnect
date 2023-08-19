@@ -11,7 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Post as post } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { selectAuth } from "../../features/authSlice";
-import { addComment, deleteComment, deletePost, dislikePost, likePost } from "../../features/posts/postSlice";
+import { addComment, deleteComment, deletePost, dislikePost, likePost, openPostModal, setEditPostObj } from "../../features/posts/postSlice";
 import { BiSmile, BiWorld } from "react-icons/bi";
 import { AiFillDelete, AiFillHeart, AiOutlineCamera, AiOutlineGif, AiOutlineHeart } from "react-icons/ai";
 import { FaRegCommentAlt, FaShare } from "react-icons/fa";
@@ -19,19 +19,16 @@ import {PiShareFatBold} from'react-icons/pi'
 import { FlareSharp } from "@mui/icons-material";
 import {HiDotsHorizontal} from 'react-icons/hi'
 import { formatDistanceToNow } from "date-fns";
+import { CreatePostModal } from "../createPostModal/CreatePostModal";
 export const Post = ( {post}:{post:post}) => {
 
   const [postId,setPostId]=useState(post?.id);
   const {user}=useAppSelector(selectAuth)
   const [postOptions, setPostOptions] = useState(false);
      const [visible,setVisisble]=useState(false)
-    const navigate = useNavigate();
-
-         const userId:number=user.id;
-         const username:string=user.name;
-           const isLiked = post?.likes?.find(user => user === userId);
-          
-          const isBookmarked =false;
+    const userId:number=user.id;
+      const username:string=user.name;
+       const isLiked = post?.likes?.find(user => user === userId);
           const dispatch = useAppDispatch();
           const [content,setContent]=useState("")
             
@@ -94,6 +91,12 @@ export const Post = ( {post}:{post:post}) => {
         dispatch(deleteComment({id,postId,username,content}))
       }
       
+      const editPostHandler = (e:React.MouseEvent<HTMLLIElement>) => {
+        e.stopPropagation();            // prevent the post content from re-occurring in new post
+        dispatch(openPostModal());
+        dispatch(setEditPostObj(post));
+        setPostOptions(false);
+    }
     return (
         // <div
         //     className="flex border  ml-0 sm:mr-0 sm:mx-3 pl-2 pr-1 sm:pr-0 sm:px-5 py-3 bg-white hover:bg-slate-100 mt-5  rounded-3xl"
@@ -218,6 +221,7 @@ export const Post = ( {post}:{post:post}) => {
         //     </div>
         // </div>
         <div className="bg-white rounded-[1rem] px-5 py-4 mt-4">
+          <CreatePostModal/>
         {/* Header */}
         <div className="flex items-center justify-between relative">
           <div className="flex items-center ">
@@ -247,7 +251,7 @@ postOptions &&
 className="w-30 h-22 px-1 shadow-xl bg-white border border-slate-300 text-slate-600 font-semibold 
     absolute right-7 top-0 z-20 rounded-xl">
 <ul className="p-0.5 cursor-pointer text-start">
-    <li className="my-1 p-1 hover:bg-slate-200 rounded" >Edit Post</li>
+    <li className="my-1 p-1 hover:bg-slate-200 rounded" onClick={editPostHandler} >Edit Post</li>
     <li className="my-1 p-1 hover:bg-slate-200 rounded" onClick={deletePostHandler}>Delete Post</li>
 </ul>
 </div>
@@ -268,9 +272,7 @@ className="w-30 h-22 px-1 shadow-xl bg-white border border-slate-300 text-slate-
         <div className="">
           <div className="flex justify-between text-[#8e8d8d] mt-1">
             <div className="flex items-center ">
-              <div className=" w-[1.1rem] h-[1.1rem]">
-              <AiFillHeart className="w-5 h-5" color="red"/>
-              </div>
+             
              
               <p className="pl-2 whitespace-nowrap  text-[15px] sm:text-[16px]">
                 {`  ${post.likes.length} Likes`}
@@ -336,10 +338,10 @@ className="w-30 h-22 px-1 shadow-xl bg-white border border-slate-300 text-slate-
                     <img src="https://img.freepik.com/vecteurs-premium/profil-avatar-homme-icone-ronde_24640-14044.jpg" className="rounded-full" />
                   </div>
                   <p className="ml-2 font-bold">{comment.username}</p>
-                  <p className="ml-2 ">{comment.content} + {comment.id}</p>
+                  <p className="ml-2 ">{comment.content} </p>
                   {
                     user.name==comment.username &&(
-                      <AiFillDelete className="ml-4 "  onClick={()=>handleDeleteCommnet(comment?.id)}/>
+                      <AiFillDelete className="ml-4 cursor-pointer "  onClick={()=>handleDeleteCommnet(comment?.id)}/>
                     )
                   }
                 </div>
