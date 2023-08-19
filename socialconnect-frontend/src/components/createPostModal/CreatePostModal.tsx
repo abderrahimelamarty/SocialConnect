@@ -15,11 +15,11 @@ import { storage } from '../../config/firebase';
 
 export const CreatePostModal = () => {
 
-     const [postData, setPostData] = useState<Post |null >();
-     const [progress, setProgress] = useState<number>(0);
+       const [postData, setPostData] = useState<Post |null >();
+        const [progress, setProgress] = useState<number>(0);
   
        const [text,setText]=useState("")
-     const [isFetching, setIsFetching] = useState(false);
+       const [isFetching, setIsFetching] = useState(false);
        const [loading, setLoading] = useState(false);
        const [image, setImage] = useState("");
    const {user}=useAppSelector(selectAuth)
@@ -68,7 +68,14 @@ export const CreatePostModal = () => {
           });
         }
       };
-
+      const handleImageDelete= (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (postData) {
+          setPostData({
+            ...postData,
+            image: '', // Make sure this matches your property name
+          });
+        }
+      };
     const cloudinaryUrl = "https://api.cloudinary.com/v1_1/dytvl1fnk/image/upload";
     const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -190,12 +197,12 @@ export const CreatePostModal = () => {
         </div>
 
         <div className=" relative">
-          {image ? (
+          {postData?.image ? (
             <div className="  w-full h-50" >
-              <img src={image} className="p-4" alt="" />
+              <img src={postData.image} className="p-4" alt="" />
               <button
                     className="absolute top-4 right-4 mt-2 mr-2 bg-red-500 text-white p-1 rounded-full"
-                    onClick={()=>setImage("")}
+                    onClick={handleImageDelete}
                 >
                     <IoMdClose size={16} />
                 </button>

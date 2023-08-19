@@ -79,7 +79,7 @@ export const likePost = createAsyncThunk(
   async (like: Like,thunkApi) => {
     
     try {
-      const URL = `http://localhost:8082/POST-SERVICE/api/posts/${like.postId}/like/${like.userId}`; // Replace with the actual URL to like the post
+      const URL = `http://localhost:8083/api/posts/${like.postId}/like/${like.userId}`; // Replace with the actual URL to like the post
       const response = await axios.post<Post>(URL);
       return response.data;
     } catch (error: any) {
