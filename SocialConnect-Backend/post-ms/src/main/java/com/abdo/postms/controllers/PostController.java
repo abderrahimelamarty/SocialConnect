@@ -68,12 +68,12 @@ public class PostController {
     @PutMapping("/{id}")
     public Post updatePost(@PathVariable Long id, @RequestBody Post post) {
         Post existingPost = postService.getPostById(id);
+        System.out.println(existingPost);
         if (existingPost != null) {
-            // Update the existing post with the new data
             existingPost.setText(post.getText());
             existingPost.setImage(post.getImage());
-            // Update other fields as needed
-            return postService.savePost(existingPost);
+
+            return postService.updatePost(existingPost);
         }
         return null;
     }

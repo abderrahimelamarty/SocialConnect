@@ -53,6 +53,11 @@ public class PostService {
         post.setComments(new ArrayList<>());
               return   postRepository.save(post);
     }
+    public Post updatePost(Post post) {
+        List<Comment> comments = commentRepository.findByPostId(post.getId());
+        post.setComments(comments);
+        return   postRepository.save(post);
+    }
     public Post likePost(Long postId,Long userId) {
         Post post = postRepository.findById(postId).orElseThrow(() ->
                 new ResourceNotFoundException("Post with ID " + postId + " not found")
@@ -68,6 +73,7 @@ public class PostService {
         // Save the updated post in the database
         return postRepository.save(post);
     }
+
     public Post dislikePost(Long postId,Long userId) {
         Post post = postRepository.findById(postId).orElseThrow(() ->
                 new ResourceNotFoundException("Post with ID " + postId + " not found")
