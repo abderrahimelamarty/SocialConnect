@@ -5,7 +5,7 @@ import { BsFillImageFill } from "react-icons/bs";
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { selectAuth } from '../../features/authSlice';
-import { closePostModal, createPost, selectPost } from '../../features/posts/postSlice';
+import { closePostModal, createPost, selectPost, updatePost } from '../../features/posts/postSlice';
 import { Post } from '../../types';
 import { AiFillVideoCamera, AiOutlineSmile } from 'react-icons/ai';
 import { IoMdClose, IoMdPhotos } from 'react-icons/io';
@@ -14,25 +14,21 @@ import { storage } from '../../config/firebase';
 
 
 export const CreatePostModal = () => {
-
        const [postData, setPostData] = useState<Post |null >();
-        const [progress, setProgress] = useState<number>(0);
-  
+       const [progress, setProgress] = useState<number>(0);
        const [text,setText]=useState("")
        const [isFetching, setIsFetching] = useState(false);
        const [loading, setLoading] = useState(false);
        const [image, setImage] = useState("");
-   const {user}=useAppSelector(selectAuth)
-  const {showPostModal,editPostObj} =useAppSelector(selectPost)
-
-    const dispatch = useAppDispatch();
+       const {user}=useAppSelector(selectAuth)
+       const {showPostModal,editPostObj} =useAppSelector(selectPost)
+       const dispatch = useAppDispatch();
 
     useEffect(() => {
         setPostData(editPostObj);
        if(postData){
         setImage(postData?.image)
        }
-
         return () => {
             setPostData(null);
         };
@@ -58,54 +54,59 @@ export const CreatePostModal = () => {
         }
     }, [isFetching]);
    
-   
-
     const handleContentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (postData) {
           setPostData({
             ...postData,
-            text: e.target.value, // Make sure this matches your property name
+            text: e.target.value, 
           });
         }
       };
+
       const handleImageDelete= (e: React.MouseEvent<HTMLButtonElement>) => {
         if (postData) {
           setPostData({
             ...postData,
-            image: '', // Make sure this matches your property name
+            image: '', 
           });
         }
       };
     const cloudinaryUrl = "https://api.cloudinary.com/v1_1/dytvl1fnk/image/upload";
-    const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-         setLoading(true)
-        if (file) {
+    // const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     const file = event.target.files?.[0];
+    //      setLoading(true)
+    //     if (file) {
           
-          const storageRef = ref(storage, `files/${file.name}`);
-          const   uploadTask = uploadBytesResumable(storageRef, file);
-           uploadTask.on("state_changed",
-            (snapshot) => {
-              const progress =
-                Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-              setProgress(progress);
+    //       const storageRef = ref(storage, `files/${file.name}`);
+    //       const   uploadTask = uploadBytesResumable(storageRef, file);
+    //        uploadTask.on("state_changed",
+    //         (snapshot) => {
+    //           const progress =
+    //             Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+    //           setProgress(progress);
              
-            },
-            (error) => {
-              alert(error);
-            },
-           async () => {
-            await   getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                console.log(downloadURL)
-                setImage(downloadURL)
-               setLoading(false)
-              });
-            }
-          );
+    //         },
+    //         (error) => {
+    //           alert(error);
+    //         },
+    //        async () => {
+    //         await   getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+    //             console.log(downloadURL)
+    //             setImage(downloadURL)
+    //            setLoading(false)
+    //           });
+    //         }
+    //       );
+    //     }
+    //   };
+    const postHandler = async (e:React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        if(postData){
+          dispatch(updatePost(postData))
         }
-      };
-    // const postHandler = async (e) => {
-    //     e.preventDefault();
+        dispatch(closePostModal());
+        
+        
     //     setIsFetching(true);
     //     if (postData) {
     //         if (
@@ -151,9 +152,9 @@ export const CreatePostModal = () => {
     //         }
     //     }
     //     setPostData({ text: "", image: "" });
-    //     dispatch(closePostModal());
+    //    
     //     dispatch(setEditPostObj(null));
-    // }
+    }
 
     return (
 
@@ -191,9 +192,7 @@ export const CreatePostModal = () => {
               className="outline-0 bg-[#f2f3f7] p-1 rounded-full pl-3 w-full h-12 truncate"
               onChange={ handleContentChange}
             />
-          </div>
-
-          
+          </div> 
         </div>
 
         <div className=" relative">
@@ -277,7 +276,7 @@ export const CreatePostModal = () => {
                   <button
                     className="bg-blue-800 text-white active:bg-emerald-600 font-bold uppercase text-sm px-2 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
-                    onClick={() => dispatch(closePostModal())}
+                    onClick={postHandler}
                   >
                     Save Changes
                   </button>

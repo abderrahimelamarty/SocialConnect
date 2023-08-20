@@ -11,14 +11,12 @@ import { logoutAsync, selectAuth } from "../../features/authSlice";
 import React from "react";
 
 export const Leftside = () => {
-  
 
     const { user } = useAppSelector(selectAuth);
     const dispatch = useAppDispatch();
-const handleLogout=(e:React.MouseEvent<HTMLButtonElement>)=>{
+    const handleLogout=(e:React.MouseEvent<HTMLButtonElement>)=>{
     e.preventDefault();
     dispatch(logoutAsync())
-
 }
    
 

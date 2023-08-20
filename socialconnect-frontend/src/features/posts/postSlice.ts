@@ -65,8 +65,22 @@ export const createPost = createAsyncThunk(
   async (newPost: PostRequest, thunkApi) => {
     const URL="http://localhost:8083/api/posts"
     try {
-      // Replace the URL with the actual endpoint to create a new post
       const response = await axios.post<Post>(URL, newPost);
+      return response.data;
+    } catch (error: any) {
+      const message = error.message;
+      return thunkApi.rejectWithValue(message);
+    }
+  }
+);
+export const updatePost = createAsyncThunk(
+  "posts/updatePost",
+  async (post: Post, thunkApi) => {
+    const URL=`http://localhost:8083/api/posts/${post.id}`
+    try {
+
+      const response = await axios.put<Post>(URL, post);
+      console.log(response.data)
       return response.data;
     } catch (error: any) {
       const message = error.message;
@@ -95,12 +109,11 @@ export const dislikePost = createAsyncThunk(
   async (like: Like,thunkApi) => {
     
     try {
-      const URL = `http://localhost:8082/POST-SERVICE/api/posts/${like.postId}/dislike/${like.userId}`; // Replace with the actual URL to like the post
+      const URL = `http://localhost:8083/api/posts/${like.postId}/dislike/${like.userId}`; // Replace with the actual URL to like the post
       const response = await axios.post<Post>(URL);
       return response.data;
     } catch (error: any) {
       const message = error.message;
-     
       return thunkApi.rejectWithValue(message);
     }
   }
@@ -234,7 +247,6 @@ const postSlice = createSlice({
         // Remove the comment from the post's comments array
         state.data![postIndex].comments = state.data![postIndex].comments.filter(comment => comment.id !== action.payload.id);
       }
-
       state.loading = false;
     })
     .addCase(deleteComment.rejected, (state, action:PayloadAction<any>) => {
@@ -255,14 +267,33 @@ const postSlice = createSlice({
     .addCase(deletePost.rejected, (state, action:PayloadAction<any>) => {
       state.loading = false;
       state.error = action.payload;
-    });
-  
+    })
 
- 
-},
 
-    
-  
+    .addCase(updatePost.pending, (state, action) => {
+      // state.loading = true;
+    })
+    .addCase(updatePost.fulfilled, (state, action: PayloadAction<Post>) => {
+      state.loading = false;
+
+      // Find the index of the updated post in the state data
+      const updatedPostIndex = state.data?.findIndex(
+        (post) => post.id === action.payload.id
+      );
+
+      // If the updated post is found in the state data, replace it with the updated data
+      if (updatedPostIndex !== undefined && updatedPostIndex !== -1) {
+        state.data![updatedPostIndex] = action.payload;
+      }
+
+      // Clear the editPostObj if it was set for editing
+      state.editPostObj = null;
+    })
+    .addCase(updatePost.rejected, (state, action: PayloadAction<any>) => {
+      state.loading = false;
+      state.error = action.payload;
+    }); 
+},  
 });
 export const { setEditPostObj, closePostModal, openPostModal } = postSlice.actions
 export const selectPost= (state: RootState) => state.post;
