@@ -13,7 +13,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '../../config/firebase';
 
 
-export const CreatePostModal = () => {
+export const CreatePostModal = ({post}:{post:Post}) => {
        const [postData, setPostData] = useState<Post |null >();
        const [progress, setProgress] = useState<number>(0);
        const [text,setText]=useState("")
@@ -25,7 +25,7 @@ export const CreatePostModal = () => {
        const dispatch = useAppDispatch();
 
     useEffect(() => {
-        setPostData(editPostObj);
+        setPostData(post);
        if(postData){
         setImage(postData?.image)
        }
@@ -72,36 +72,42 @@ export const CreatePostModal = () => {
         }
       };
     const cloudinaryUrl = "https://api.cloudinary.com/v1_1/dytvl1fnk/image/upload";
-    // const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     const file = event.target.files?.[0];
-    //      setLoading(true)
-    //     if (file) {
+    const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+         setLoading(true)
+        if (file) {
           
-    //       const storageRef = ref(storage, `files/${file.name}`);
-    //       const   uploadTask = uploadBytesResumable(storageRef, file);
-    //        uploadTask.on("state_changed",
-    //         (snapshot) => {
-    //           const progress =
-    //             Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-    //           setProgress(progress);
+          const storageRef = ref(storage, `files/${file.name}`);
+          const   uploadTask = uploadBytesResumable(storageRef, file);
+           uploadTask.on("state_changed",
+            (snapshot) => {
+              const progress =
+                Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+              setProgress(progress);
              
-    //         },
-    //         (error) => {
-    //           alert(error);
-    //         },
-    //        async () => {
-    //         await   getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-    //             console.log(downloadURL)
-    //             setImage(downloadURL)
-    //            setLoading(false)
-    //           });
-    //         }
-    //       );
-    //     }
-    //   };
+            },
+            (error) => {
+              alert(error);
+            },
+           async () => {
+            await   getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                console.log(downloadURL)
+                if (postData) {
+                  setPostData({
+                    ...postData,
+                    image:downloadURL, 
+                  });
+                }
+               setLoading(false)
+              });
+            }
+          );
+        }
+      };
     const postHandler = async (e:React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if(postData){
+          console.log(postData);
           dispatch(updatePost(postData))
         }
         dispatch(closePostModal());
@@ -157,8 +163,6 @@ export const CreatePostModal = () => {
     }
 
     return (
-
-
     <>
       {showPostModal ? (
         <>
@@ -199,12 +203,7 @@ export const CreatePostModal = () => {
           {postData?.image ? (
             <div className="  w-full h-50" >
               <img src={postData.image} className="p-4" alt="" />
-              <button
-                    className="absolute top-4 right-4 mt-2 mr-2 bg-red-500 text-white p-1 rounded-full"
-                    onClick={handleImageDelete}
-                >
-                    <IoMdClose size={16} />
-                </button>
+             
             </div>
           ) : (
             ""
@@ -245,7 +244,7 @@ export const CreatePostModal = () => {
             <input
                                                 className="hidden "
                                                 type="file"
-                                                // onChange={handleImageUpload}
+                                                onChange={handleImageUpload}
                                             />
                                             
           

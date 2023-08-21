@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Leftside } from '../../components/LeftSide/Leftside'
 import { MobileNavBar } from '../../components/mobile/MobileNavBar'
 import { GiSettingsKnobs } from "react-icons/gi";
@@ -13,17 +13,19 @@ import { AsideRight } from '../../components/Rightside/Rightside';
 import { AiOutlineArrowUp } from 'react-icons/ai';
 import CreatePost from '../../components/createPost/CreatePost';
 import { ColorRing } from  'react-loader-spinner'
+import { Post  as post} from '../../types';
+
 export default function Home() {
     const dispatch=useAppDispatch()
-
+const [post,setPosts]=useState<post[]>();
     useEffect(() => {
         dispatch(getPosts());
        
        
       }, [dispatch]);
       const { loading, data } = useAppSelector(selectPost);
-     
-
+      
+   
   return (
     <div >
       <MobileNavBar/>
@@ -125,6 +127,7 @@ export default function Home() {
       
         ) : (
           data &&
+
           data.map((post) => (
             <div className="col-md-6 col-lg-4" key={post.id}>
              <Post  post={post} />
