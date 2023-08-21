@@ -25,7 +25,15 @@ const [post,setPosts]=useState<post[]>();
       }, [dispatch]);
       const { loading, data } = useAppSelector(selectPost);
       
-   
+      function sortByTimestamp(posts: post[]): post[] {
+        const copy=[...posts];
+        return copy.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      }
+    //   if(data){
+    //     setPosts(sortByTimestamp(data))
+    //   }
+      
+
   return (
     <div >
       <MobileNavBar/>
