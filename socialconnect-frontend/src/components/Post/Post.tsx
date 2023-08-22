@@ -221,7 +221,8 @@ export const Post = ( {post}:{post:post}) => {
         //     </div>
         // </div>
         <div className="bg-white rounded-[1rem] px-5 py-4 mt-4">
-          <CreatePostModal post={post}/>
+          
+          <CreatePostModal />
         {/* Header */}
         <div className="flex items-center justify-between relative">
           <div className="flex items-center ">

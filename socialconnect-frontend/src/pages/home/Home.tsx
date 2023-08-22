@@ -17,7 +17,7 @@ import { Post  as post} from '../../types';
 
 export default function Home() {
     const dispatch=useAppDispatch()
-const [post,setPosts]=useState<post[]>();
+const [posts,setPosts]=useState<post[]>();
     useEffect(() => {
         dispatch(getPosts());
        
@@ -29,9 +29,13 @@ const [post,setPosts]=useState<post[]>();
         const copy=[...posts];
         return copy.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
       }
-    //   if(data){
-    //     setPosts(sortByTimestamp(data))
-    //   }
+      useEffect(() => {
+        if (data) {
+          const sortedPosts = sortByTimestamp(data);
+          setPosts(sortedPosts);
+        }
+      }, [data]);
+    
       
 
   return (
@@ -134,9 +138,10 @@ const [post,setPosts]=useState<post[]>();
                                       </div>
       
         ) : (
-          data &&
+          posts &&
 
-          data.map((post) => (
+        posts
+          .map((post) => (
             <div className="col-md-6 col-lg-4" key={post.id}>
              <Post  post={post} />
             </div>

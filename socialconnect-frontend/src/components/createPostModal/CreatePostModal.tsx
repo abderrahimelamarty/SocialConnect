@@ -13,7 +13,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '../../config/firebase';
 
 
-export const CreatePostModal = ({post}:{post:Post}) => {
+export const CreatePostModal = () => {
        const [postData, setPostData] = useState<Post |null >();
        const [progress, setProgress] = useState<number>(0);
        const [text,setText]=useState("")
@@ -25,10 +25,8 @@ export const CreatePostModal = ({post}:{post:Post}) => {
        const dispatch = useAppDispatch();
 
     useEffect(() => {
-        setPostData(post);
-       if(postData){
-        setImage(postData?.image)
-       }
+      
+       setPostData(editPostObj)
         return () => {
             setPostData(null);
         };
@@ -73,6 +71,13 @@ export const CreatePostModal = ({post}:{post:Post}) => {
       };
     const cloudinaryUrl = "https://api.cloudinary.com/v1_1/dytvl1fnk/image/upload";
     const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+      if(postData){
+setPostData({
+        ...postData,
+        image:"", 
+      });
+      }
+      
         const file = event.target.files?.[0];
          setLoading(true)
         if (file) {

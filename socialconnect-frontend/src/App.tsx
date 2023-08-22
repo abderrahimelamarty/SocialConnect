@@ -8,9 +8,12 @@ import PrivateRoute from './components/PrivateRoute';
 import Navbar from './components/NavBar/Navbar';
 import { Profile } from './pages/Profile/Profile';
 import "./App.css"
+import Header from './components/header/Header';
 
 function App() {
   return (
+    <div>
+      <Header/>
     <Routes>
 
     <Route
@@ -30,6 +33,7 @@ function App() {
     <Route path="/login" element={<Login />} />
     <Route path="/register" element={<Register />} />
   </Routes>
+  </div>
   );
 }
 

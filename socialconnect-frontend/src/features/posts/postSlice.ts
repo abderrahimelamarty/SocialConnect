@@ -13,8 +13,7 @@ export const getPosts = createAsyncThunk(
         URL
       );
       console.log(response.data)
-      
-      return response.data.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      return response.data;
     } catch (error: any) {
       const message = error.message;
       return thunkApi.rejectWithValue(message);
