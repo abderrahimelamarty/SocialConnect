@@ -8,10 +8,9 @@ const HeaderProfile = () => {
     <>
       <img
         // onClick={signOut}
-        className="rounded-full cursor-pointer"
-    src="https://wallpapercrafter.com/desktop1/505594-anime-anime-boys-Jujutsu-Kaisen-Satoru-Gojo-4K.jpg"
-        width={40}
-        height={40}
+        className="rounded-full cursor-pointer w-10 h-10"
+    src="https://www.themarysue.com/wp-content/uploads/2022/09/levi-.jpeg"
+       
        
         alt="avatar"
       />

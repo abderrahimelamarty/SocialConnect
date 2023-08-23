@@ -7,7 +7,7 @@ interface HeaderNavIconProps {
 
 const HeaderNavIcon: React.FC<HeaderNavIconProps> = ({
   Icon,
-  active = false,
+  active = true,
 }) => {
   return (
     <div
@@ -19,7 +19,7 @@ const HeaderNavIcon: React.FC<HeaderNavIconProps> = ({
       <Icon
         className={`h-5 sm:h-7 text-center text-gray-500 mx-auto 
         group-hover:text-blue-500 transition-colors duration-200
-        ease-in-out ${active && "text-blue-500"}`}
+        ease-in-out ${active && "color-blue-500"}`}
       />
     </div>
   );
