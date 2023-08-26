@@ -80,6 +80,22 @@ export const Leftside = () => {
                         </NavLink>
                     </li>
                     <li>
+                        <NavLink to="/bookmarks" className="flex py-4 gap-3 px-3 cursor-pointer hover:bg-slate-200 rounded-[15rem] active:bg-slate-100">
+                            {({ isActive }) => 
+                                isActive ? (
+                                    <>
+                                        <MdOutlineBookmark className="text-[1.6rem] font-bold"/> 
+                                        <h2 className="text-xl px-1 hidden xl:block font-bold"> Bookmarks </h2>
+                                    </>
+                                ) : (
+                                    <>
+                                        <MdOutlineBookmarkBorder className="text-[1.6rem]"/>
+                                        <h2 className="text-xl px-1 hidden xl:block"> Notifications </h2>  
+                                    </>
+                                )}
+                        </NavLink>
+                    </li>
+                    <li>
                         <NavLink to="/profile" className="flex py-4 gap-3 px-3 cursor-pointer hover:bg-slate-200 rounded-[15rem] active:bg-slate-100">
                             {({ isActive }) => 
                                 isActive ? (
